@@ -93,8 +93,8 @@ class Client extends Component {
                     <td>{client.clientLastName} {client.clientName} {client.clientMiddleName}</td>
                     <td>
                         <ButtonGroup>
-                            <Button size="sm" color="primary" onClick={() => this.change(client.clientId)}>Edit</Button>
-                            <Button size="sm" color="danger" onClick={() => this.remove(client.clientId)}>Delete</Button>
+                            <Button size="sm" color="primary" onClick={() => this.change(client.clientId)}>Редактировать</Button>
+                            <Button size="sm" color="danger" onClick={() => this.remove(client.clientId)}>Удалить</Button>
                         </ButtonGroup>
                     </td>
                 </tr>
@@ -104,9 +104,9 @@ class Client extends Component {
                     <AppNavbar/>
                     <Container fluid>
                         <div className="float-right">
-                            <Button color="success" onClick={()=>this.add()}>Add Client</Button>
+                            <Button color="success" onClick={()=>this.add()}>Добавить клиента</Button>
                         </div>
-                        <h3>Clients</h3>
+                        <h3>Клиенты</h3>
                         <Table className="mt-4">
                             <thead>
                             <tr>
@@ -181,7 +181,7 @@ class Client extends Component {
                                        onChange={this.handleChange} autoComplete="clientMiddleName"/>
                             </FormGroup>
                             <FormGroup>
-                                <Button color="primary" type="submit">Save</Button>{' '}
+                                <Button color="primary" type="submit">Сохранить</Button>{' '}
                                 <Button color="secondary" onClick={()=>window.location.reload()}>Назад</Button>
                             </FormGroup>
                         </Form>
