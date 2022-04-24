@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import {Button, ButtonGroup, Container, Form, FormGroup, Input, Label, Table} from 'reactstrap';
 import AppNavbar from './AppNavbar';
+import './App.css';
 
 class Client extends Component {
 
@@ -94,7 +95,7 @@ class Client extends Component {
                     <td>
                         <ButtonGroup>
                             <Button size="sm" color="primary" onClick={() => this.change(client.clientId)}>Редактировать</Button>
-                            <Button size="sm" color="danger" onClick={() => this.remove(client.clientId)}>Удалить</Button>
+                            <Button size="sm" id="delete-button" onClick={() => this.remove(client.clientId)}>Удалить</Button>
                         </ButtonGroup>
                     </td>
                 </tr>

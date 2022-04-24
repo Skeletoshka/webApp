@@ -13,6 +13,7 @@ class Home extends Component {
                     <Button color="link"><Link to="/client">Клиенты</Link></Button>
                     <Button color="link"><Link to="/post">Должности</Link></Button>
                     <Button color="link"><Link to="/projectstatus">Статусы проекта</Link></Button>
+                    <Button color="link"><Link to="/movestatus">Статусы движения</Link></Button>
                 </Container>
             </div>
         );

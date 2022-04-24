@@ -82,7 +82,7 @@ class Post extends Component {
                     <td>
                         <ButtonGroup>
                             <Button size="sm" color="primary" onClick={() => this.change(post.postId)}>Редактировать</Button>
-                            <Button size="sm" color="danger" onClick={() => this.remove(post.postId)}>Удалить</Button>
+                            <Button size="sm" id="delete-button" onClick={() => this.remove(post.postId)}>Удалить</Button>
                         </ButtonGroup>
                     </td>
                 </tr>
