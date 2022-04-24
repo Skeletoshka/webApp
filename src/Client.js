@@ -56,7 +56,7 @@ class Client extends Component {
         event.preventDefault();
         let item = this.state.item;
 
-        await fetch('/client/update', {
+        await fetch('http://localhost:8090/client/update', {
             method: 'PUT',
             headers: {
                 'Accept': 'application/json',
