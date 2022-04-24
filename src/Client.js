@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import {Button, ButtonGroup, Container, Form, FormGroup, Input, Label, Table} from 'reactstrap';
 import AppNavbar from './AppNavbar';
-import { Link } from 'react-router-dom';
 
-class ClientList extends Component {
+class Client extends Component {
 
     emptyItem = {
         clientId:0,
@@ -192,4 +191,4 @@ class ClientList extends Component {
         }
     }
 }
-export default ClientList;
+export default Client;

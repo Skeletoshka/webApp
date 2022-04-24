@@ -2,9 +2,7 @@ import React, { Component } from 'react';
 import './App.css';
 import Home from './Home';
 import { Route, Routes, BrowserRouter } from 'react-router-dom';
-import ClientList from './ClientList';
-import { ConfigProvider } from 'antd';
-import ruRU from 'antd/lib/locale/ru_RU';
+import Client from './Client';
 import moment from 'moment';
 import 'moment/locale/ru';
 
@@ -17,7 +15,7 @@ class App extends Component {
         <BrowserRouter>
           <Routes>
             <Route path='/' element={<Home />} />
-            <Route path='/client' element={<ClientList />} />
+            <Route path='/client' element={<Client />} />
           </Routes>
         </BrowserRouter>
     )
