@@ -18,6 +18,11 @@ export default class AppNavbar extends Component {
     render() {
         return <Navbar color="dark" dark expand="md">
             <NavbarBrand tag={Link} to="/">Home</NavbarBrand>
+            <NavbarBrand tag={Link} to="/client">Клиенты</NavbarBrand>
+            <NavbarBrand tag={Link} to="/post">Должности</NavbarBrand>
+            <NavbarBrand tag={Link} to="/projectstatus">Статусы проекта</NavbarBrand>
+            <NavbarBrand tag={Link} to="/movestatus">Статусы движения</NavbarBrand>
+            <NavbarBrand tag={Link} to="/worker">Сотрудники</NavbarBrand>
         </Navbar>;
     }
 }
