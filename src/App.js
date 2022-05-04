@@ -7,6 +7,7 @@ import Post from "./Post"
 import ProjectStatus from "./ProjectStatus"
 import MoveStatus from "./MoveStatus"
 import Worker from "./Worker"
+import Company from "./Company";
 import moment from 'moment';
 import 'moment/locale/ru';
 
@@ -26,6 +27,7 @@ class App extends Component {
               <Route path='/projectstatus' element={<ProjectStatus />} />
               <Route path='/movestatus' element={<MoveStatus />} />
               <Route path='/worker' element={<Worker />} />
+              <Route path='/company' element={<Company />} />
           </Routes>
         </BrowserRouter>
         </div>
