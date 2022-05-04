@@ -11,6 +11,7 @@ import Company from "./Company";
 import moment from 'moment';
 import 'moment/locale/ru';
 import Order from "./Order";
+import Project from "./Project";
 
 document.documentElement.lang = 'ru';
 moment.locale('ru');
@@ -30,6 +31,7 @@ class App extends Component {
               <Route path='/worker' element={<Worker />} />
               <Route path='/company' element={<Company />} />
               <Route path='/order' element={<Order />} />
+              <Route path='/project' element={<Project />} />
           </Routes>
         </BrowserRouter>
         </div>

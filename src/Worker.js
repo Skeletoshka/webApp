@@ -13,9 +13,9 @@ class Worker extends Component {
         workerSalary: 0,
         postId: 0,
         postName: '',
-        workerBirthday: new Date(),
-        workerDateStartJob: new Date(),
-        workerDateEndJob: new Date(),
+        workerBirthday: new Date().toISOString(),
+        workerDateStartJob: new Date().toISOString(),
+        workerDateEndJob: new Date().toISOString(),
         workerPassword: '',
     };
 
