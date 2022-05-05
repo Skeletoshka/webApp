@@ -7,7 +7,7 @@ class Report extends Component {
 
     constructor(props) {
         super(props);
-        this.state = {orders: [],Id:1, action: "get"};
+        this.state = {orders: [], workers: [], Id:1, action: "get"};
         //this.remove = this.remove.bind(this);
         this.handleChange = this.handleChange.bind(this);
         //this.handleSubmit = this.handleSubmit.bind(this);
@@ -17,6 +17,9 @@ class Report extends Component {
         fetch('http://localhost:8090/order/getlist')
             .then(response => response.json())
             .then(data => this.setState({orders: data}));
+        fetch('http://localhost:8090/worker/getlist')
+            .then(response => response.json())
+            .then(data => this.setState({workers: data}));
     }
 
     async getReport(id){
@@ -33,14 +36,42 @@ class Report extends Component {
         this.setState({action: "reportClient"});
     }
 
+    async acceptWorker(id){
+        await fetch(`http://localhost:8090/report/worker`, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: id
+        })
+            .then(response => response.json())
+            .then(data => this.setState({item: data}));
+        this.setState({action: "acceptWorker"});
+    }
+
+    async dismissWorker(id){
+        await fetch(`http://localhost:8090/report/worker`, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: id
+        })
+            .then(response => response.json())
+            .then(data => this.setState({item: data}));
+        this.setState({action: "dismissWorker"});
+    }
+
     handleChange(event) {
         const target = event.target;
         const value = target.value;
-        this.getReport(value);
+        this.setState({Id: value});
     };
 
     render() {
-        const {item, orders, isLoading} = this.state;
+        const {item, orders, workers, isLoading} = this.state;
 
         if (isLoading) {
             return <p>Loading...</p>;
@@ -49,6 +80,9 @@ class Report extends Component {
         if(this.state.action === "get") {
             const orderList = orders.map(order => {
                 return <option value={order.orderId}>{order.orderId}</option>
+            })
+            const workerList = workers.map(worker => {
+                return <option value = {worker.workerId}>{worker.workerLastName} {worker.workerName} {worker.workerMiddleName}</option>
             })
             const {Id} = this.state;
             return (
@@ -60,6 +94,13 @@ class Report extends Component {
                             onChange={this.handleChange} autoComplete="orderId">{orderList}</select>
                     <Button onClick={() => this.getReport(Id)}>Получить</Button>
                 </FormGroup>
+                <FormGroup>
+                    <Label for="Id">Сотрудник</Label>
+                    <select name="workerId" id="workerId" defaultValue={Id || ''}
+                            onChange={this.handleChange} autoComplete="workerId">{workerList}</select>
+                    <Button onClick={() => this.acceptWorker(Id)}>Принять</Button>
+                    <Button onClick={() => this.dismissWorker(Id)}>Уволить</Button>
+                </FormGroup>
                 </div>
             );
         }
@@ -70,7 +111,7 @@ class Report extends Component {
                 <div>
                     <AppNavbar/>
                     <div className="float-right">
-                        <Button color="success" onClick={()=>this.window.reload()}>Добавить заказ</Button>
+                        <Button color="success" onClick={()=>this.window.reload()}>Назад</Button>
                     </div>
                     <Table className="mt-4">
                         <thead>
@@ -144,6 +185,133 @@ class Report extends Component {
                         <tr>
                             <td>Генеральный директор</td>
                             <td>Генеральный директор</td>
+                        </tr>
+                        <tr>
+                            <td>______________________/_______________________</td>
+                            <td>______________________/_______________________</td>
+                        </tr>
+                        <tr>
+                            <td>              подпись/расшифровка</td>
+                            <td>              подпись/расшифровка</td>
+                        </tr>
+                        </tbody>
+                    </Table>
+                </div>
+            );
+        }
+        if(this.state.action === "acceptWorker"){
+            const title = <h2>Трудовой договор</h2>;
+            document.body.style = 'background: #ffffff;';
+            return (
+                <div>
+                    <AppNavbar/>
+                    <div className="float-right">
+                        <Button color="success" onClick={()=>this.window.reload()}>Назад</Button>
+                    </div>
+                    <Table className="mt-4">
+                        <thead>
+                        <tr align={"center"}>
+                            <td colSpan="2">{title}</td>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td colspan="2">Общество с ограниченной ответственностью "Геликон" (ООО "Геликон") в лице директора {item.dirLastName} {item.dirName} {item.dirMiddleName},
+                                действующего на основании устава компании, именуемый в дальнейшем "Работодатель" с одной стороны и {item.workerLastName} {item.workerName} {item.workerMiddleName}
+                                 с другой стороны, именуемый в дальнейшем "Работник" заключили настоящий договор о нижеследующем:</td>
+                        </tr>
+                        <tr align={"center"}>
+                            <td colSpan="2">1. Общие положения</td>
+                        </tr>
+                        <tr>
+                            <td colSpan="2">1.1 Работник принимается на должность {item.postName}.</td>
+                        </tr>
+                        <tr>
+                            <td colSpan="2">1.2 Работа в организации является для работника основной работой.</td>
+                        </tr>
+                        <tr>
+                            <td colSpan="2">1.3 Настоящий трудовой договор вступает в силу с момента подписания его обеими сторонами.</td>
+                        </tr>
+                        <tr>
+                            <td colSpan="2">1.4 Работник фактически приступил к работе в ООО "Геликон" {new Date(item.workerDateStartJob).getDate()}.{new Date(item.workerDateStartJob).getMonth()}.{new Date(item.workerDateStartJob).getFullYear()}</td>
+                        </tr>
+                        <tr align={"center"}>
+                            <td colSpan="2">6. Данные сторон</td>
+                        </tr>
+                        <tr>
+                            <td width={"50%"}>Работодатель: Общество с ограниченной ответственностью "Геликон" (ООО "Геликон"), находящийся по адресу {item.companyLegalCity},
+                                {item.companyLegalStreet} {item.companyLegalHouse}, т. {item.companyPhoneNumber}</td>
+                            <td width={"50%"}>Работник {item.workerLastName} {item.workerName} {item.workerMiddleName}, Дата рождения {new Date(item.workerBirthday).getDate()}.{new Date(item.workerBirthday).getMonth()}.{new Date(item.workerBirthday).getFullYear()}</td>
+                        </tr>
+                        <tr>
+                            <td>Генеральный директор</td>
+                            <td>Работник</td>
+                        </tr>
+                        <tr>
+                            <td>______________________/_______________________</td>
+                            <td>______________________/_______________________</td>
+                        </tr>
+                        <tr>
+                            <td>              подпись/расшифровка</td>
+                            <td>              подпись/расшифровка</td>
+                        </tr>
+                        </tbody>
+                    </Table>
+                </div>
+            );
+        }
+        if(this.state.action === "dismissWorker"){
+            const title = <h2>Соглашение о расторжении трудового договора</h2>;
+            document.body.style = 'background: #ffffff;';
+            return (
+                <div>
+                    <AppNavbar/>
+                    <div className="float-right">
+                        <Button color="success" onClick={()=>this.window.reload()}>Назад</Button>
+                    </div>
+                    <Table className="mt-4">
+                        <thead>
+                        <tr align={"center"}>
+                            <td colSpan="2">{title}</td>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td colspan="2">Общество с ограниченной ответственностью "Геликон" (ООО "Геликон") в лице директора {item.dirLastName} {item.dirName} {item.dirMiddleName},
+                                действующего на основании устава компании, именуемый в дальнейшем "Работодатель" с одной стороны и {item.workerLastName} {item.workerName} {item.workerMiddleName}
+                                с другой стороны, именуемый в дальнейшем "Работник" заключили настоящий договор о нижеследующем:</td>
+                        </tr>
+                        <tr align={"center"}>
+                            <td colSpan="2">1. Общие положения</td>
+                        </tr>
+                        <tr>
+                            <td colSpan="2">1.1 Стороны пришли к соглашению о расторжении трудового договора от {new Date(item.workerDateStartJob).getDate()}.{new Date(item.workerDateStartJob).getMonth()}.{new Date(item.workerDateStartJob).getFullYear()}
+                                на следующих условиях:</td>
+                        </tr>
+                        <tr>
+                            <td colSpan="2">1.2 Договор прекращает свое действие {new Date(item.workerDateEndJob).getDate()}.{new Date(item.workerDateEndJob).getMonth()}.
+                                {new Date(item.workerDateEndJob).getFullYear()} в соответствии с _____________________________________________________________.(Причина увольнения)</td>
+                        </tr>
+                        <tr>
+                            <td colSpan="2">1.3 Работодатель обязуется предоставить работнику на основании его письменного заявления ежегодный оплачиваемый отпуск в количестве ___ дней с ________________ по _______________ 20__ года</td>
+                        </tr>
+                        <tr>
+                            <td colSpan="2">1.4 На момент подписания настоящего соглашения стороны подтверждают, что претензий дуг к другу не имеют.</td>
+                        </tr>
+                        <tr>
+                            <td colSpan="2">1.5 Настоящее соглашение вступает в силу с момента подписания сторонами, составлено в двух экземплярах, имеющих равную юридическую силу, по одному экземпляру для каждой из сторон.</td>
+                        </tr>
+                        <tr align={"center"}>
+                            <td colSpan="2">6. Данные сторон</td>
+                        </tr>
+                        <tr>
+                            <td width={"50%"}>Работодатель: Общество с ограниченной ответственностью "Геликон" (ООО "Геликон"), находящийся по адресу {item.companyLegalCity},
+                                {item.companyLegalStreet} {item.companyLegalHouse}, т. {item.companyPhoneNumber}</td>
+                            <td width={"50%"}>Работник {item.workerLastName} {item.workerName} {item.workerMiddleName}, Дата рождения {new Date(item.workerBirthday).getDate()}.{new Date(item.workerBirthday).getMonth()}.{new Date(item.workerBirthday).getFullYear()}</td>
+                        </tr>
+                        <tr>
+                            <td>Генеральный директор</td>
+                            <td>Работник</td>
                         </tr>
                         <tr>
                             <td>______________________/_______________________</td>
