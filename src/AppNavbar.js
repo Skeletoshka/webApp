@@ -26,6 +26,7 @@ export default class AppNavbar extends Component {
             <NavbarBrand tag={Link} to="/company">Компания</NavbarBrand>
             <NavbarBrand tag={Link} to="/order">Заказы</NavbarBrand>
             <NavbarBrand tag={Link} to="/project">Проекты</NavbarBrand>
+            <NavbarBrand tag={Link} to="/task">Задания</NavbarBrand>
         </Navbar>;
     }
 }

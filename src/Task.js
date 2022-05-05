@@ -3,44 +3,35 @@ import {Button, ButtonGroup, Container, Form, FormGroup, Input, Label, Table} fr
 import AppNavbar from './AppNavbar';
 import './App.css';
 
-class Project extends Component {
+class Task extends Component {
 
     emptyItem = {
-        projectId:0,
-        orderId:1,
-        workerId:1,
-        workerLastName: '',
-        workerName: '',
-        workerMiddleName: '',
-        projectStatusId:1,
-        projectStatusName: '',
+        taskId:0,
+        projectId:1,
+        taskImportance:1,
+        taskDateEnd: new Date().toISOString(),
+        taskMission: '',
     };
 
     constructor(props) {
         super(props);
-        this.state = {projects: [], workers:[], projectStatuses:[], orders:[], item: this.emptyItem, action: "get"};
+        this.state = {tasks: [], projects:[], item: this.emptyItem, action: "get"};
         this.remove = this.remove.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
     componentDidMount() {
+        fetch('http://localhost:8090/task/getlist')
+            .then(response => response.json())
+            .then(data => this.setState({tasks: data}));
         fetch('http://localhost:8090/project/getlist')
             .then(response => response.json())
             .then(data => this.setState({projects: data}));
-        fetch('http://localhost:8090/worker/getlist')
-            .then(response => response.json())
-            .then(data => this.setState({workers: data}));
-        fetch('http://localhost:8090/projectstatus/getlist')
-            .then(response => response.json())
-            .then(data => this.setState({projectStatuses: data}));
-        fetch('http://localhost:8090/order/getlist')
-            .then(response => response.json())
-            .then(data => this.setState({orders: data}));
     }
 
     async remove(id) {
-        await fetch(`http://localhost:8090/project/delete`, {
+        await fetch(`http://localhost:8090/task/delete`, {
             method: 'DELETE',
             headers: {
                 'Accept': 'application/json',
@@ -52,7 +43,7 @@ class Project extends Component {
     }
 
     async change(id){
-        const worker = await (await fetch(`http://localhost:8090/project/get`,{method: "POST", body: JSON.stringify(id)})).json();
+        const worker = await (await fetch(`http://localhost:8090/task/get`,{method: "POST", body: JSON.stringify(id)})).json();
         this.setState({item: worker, action: "change"});
     }
 
@@ -63,7 +54,7 @@ class Project extends Component {
     async handleSubmit(event) {
         event.preventDefault();
         let item = this.state.item;
-        await fetch('http://localhost:8090/project/update', {
+        await fetch('http://localhost:8090/task/update', {
             method: 'PUT',
             headers: {
                 'Accept': 'application/json',
@@ -71,7 +62,7 @@ class Project extends Component {
             },
             body: JSON.stringify(item),
         });
-        this.props.history.push('/project');
+        this.props.history.push('/task');
     }
 
     handleChange(event) {
@@ -93,24 +84,25 @@ class Project extends Component {
     }
 
     render() {
-        const {projects, workers, projectStatuses,orders, isLoading} = this.state;
+        const {tasks, projects, isLoading} = this.state;
 
         if (isLoading) {
             return <p>Loading...</p>;
         }
 
         if(this.state.action === "get") {
-            const projectList = projects.map(project => {
-                return <tr key={project.projectId}>
-                    <td style={{whiteSpace: 'nowrap'}}>{project.orderId}</td>
-                    <td>{project.workerLastName} {project.workerName} {project.workerMiddleName}</td>
-                    <td>{project.projectStatusName}</td>
+            const taskList = tasks.map(task => {
+                return <tr key={task.taskId}>
+                    <td style={{whiteSpace: 'nowrap'}}>{task.projectId}</td>
+                    <td>{task.taskImportance}</td>
+                    <td>{task.taskDateEnd}</td>
+                    <td>{task.taskMission}</td>
                     <td>
                         <ButtonGroup>
                             <Button size="sm" color="primary"
-                                    onClick={() => this.change(project.projectId)}>Редактировать</Button>
+                                    onClick={() => this.change(task.taskId)}>Редактировать</Button>
                             <Button size="sm" id="delete-button"
-                                    onClick={() => this.remove(project.projectId)}>Удалить</Button>
+                                    onClick={() => this.remove(task.taskId)}>Удалить</Button>
                         </ButtonGroup>
                     </td>
                 </tr>
@@ -122,17 +114,18 @@ class Project extends Component {
                         <div className="float-right">
                             <Button color="success" onClick={()=>this.add()}>Добавить заказ</Button>
                         </div>
-                        <h3>Проекты</h3>
+                        <h3>Задания</h3>
                         <Table className="mt-4">
                             <thead>
                             <tr>
-                                <th width="30%">Номер договора</th>
-                                <th width="40%">Руководитель проекта</th>
-                                <th width="30%">Статус проекта</th>
+                                <th width="15%">Номер проекта</th>
+                                <th width="15%">Приоритет</th>
+                                <th width="30%">Выполнить до:</th>
+                                <th width="40%">Задание</th>
                             </tr>
                             </thead>
                             <tbody>
-                                {projectList}
+                            {taskList}
                             </tbody>
                         </Table>
                     </Container>
@@ -141,16 +134,10 @@ class Project extends Component {
         }
         if(this.state.action === "change" || this.state.action === "add"){
             const {item} = this.state;
-            const workerList = workers.map(worker => {
-                return <option value = {worker.workerId}>{worker.workerLastName} {worker.workerName} {worker.workerMiddleName}</option>
+            const projectList = projects.map(project => {
+                return <option value = {project.projectId}>{project.projectId}</option>
             })
-            const projectStatusList = projectStatuses.map(projectStatus => {
-                return <option value = {projectStatus.projectStatusId}>{projectStatus.projectStatusName}</option>
-            })
-            const orderList = orders.map(order => {
-                return <option value={order.orderId}>{order.orderId}</option>
-            })
-            const title = <h2>Редактирование информации о проекте</h2>;
+            const title = <h2>Редактирование информации о Задании</h2>;
             return (
                 <div>
                     <AppNavbar/>
@@ -158,19 +145,27 @@ class Project extends Component {
                         {title}
                         <Form onSubmit={this.handleSubmit}>
                             <FormGroup>
-                                <Label for="orderId">Номер договора</Label>
-                                <select name="orderId" id="orderId" defaultValue={item.orderId || ''}
-                                        onChange={this.handleChange} autoComplete="orderId">{orderList}</select>
+                                <Label for="projectId">Номер проекта</Label>
+                                <select name="projectId" id="projectId" defaultValue={item.projectId || ''}
+                                        onChange={this.handleChange} autoComplete="projectId">{projectList}</select>
                             </FormGroup>
                             <FormGroup>
-                                <Label for="workerId">Руководитель проекта</Label>
-                                <select name="workerId" id="workerId" defaultValue={item.workerId || ''}
-                                        onChange={this.handleChange} autoComplete="workerId">{workerList}</select>
+                                <Label for="taskImportance">Приоритет</Label>
+                                <Input type="text" name="taskImportance" id="taskImportance"
+                                       defaultValue={item.taskImportance || ''}
+                                       onChange={this.handleChange} autoComplete="taskImportance"/>
                             </FormGroup>
                             <FormGroup>
-                                <Label for="projectStatusId">Статус проекта</Label>
-                                <select name="projectStatusId" id="projectStatusId" defaultValue={item.projectStatusId || ''}
-                                        onChange={this.handleChange} autoComplete="projectStatusId">{projectStatusList}</select>
+                                <Label for="taskDateEnd">Выполнить до:</Label>
+                                <Input type="text" name="taskDateEnd" id="taskDateEnd"
+                                       defaultValue={item.taskDateEnd || ''}
+                                       onChange={this.handleChange} autoComplete="taskDateEnd"/>
+                            </FormGroup>
+                            <FormGroup>
+                                <Label for="taskMission">Задание</Label>
+                                <Input type="text" name="taskMission" id="taskMission"
+                                       defaultValue={item.taskMission || ''}
+                                       onChange={this.handleChange} autoComplete="taskMission"/>
                             </FormGroup>
                             <FormGroup>
                                 <Button color="primary" type="submit">Сохранить</Button>{' '}
@@ -183,4 +178,4 @@ class Project extends Component {
         }
     }
 }
-export default Project;
+export default Task;
