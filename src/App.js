@@ -13,6 +13,7 @@ import 'moment/locale/ru';
 import Order from "./Order";
 import Project from "./Project";
 import Task from "./Task";
+import Move from "./Move";
 
 document.documentElement.lang = 'ru';
 moment.locale('ru');
@@ -34,6 +35,7 @@ class App extends Component {
               <Route path='/order' element={<Order />} />
               <Route path='/project' element={<Project />} />
               <Route path='/task' element={<Task />} />
+              <Route path='/move' element={<Move />} />
           </Routes>
         </BrowserRouter>
         </div>
