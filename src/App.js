@@ -14,6 +14,7 @@ import Order from "./Order";
 import Project from "./Project";
 import Task from "./Task";
 import Move from "./Move";
+import Report from "./Report";
 
 document.documentElement.lang = 'ru';
 moment.locale('ru');
@@ -36,6 +37,7 @@ class App extends Component {
               <Route path='/project' element={<Project />} />
               <Route path='/task' element={<Task />} />
               <Route path='/move' element={<Move />} />
+              <Route path='/report' element={<Report />} />
           </Routes>
         </BrowserRouter>
         </div>
