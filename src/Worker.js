@@ -4,6 +4,8 @@ import AppNavbar from './AppNavbar';
 import './App.css';
 import {useNavigate} from "react-router-dom";
 import {Form} from "antd";
+import Calendar from 'react-calendar';
+import 'react-calendar/dist/Calendar.css';
 
 const emptyItem = {
     workerId:0,
@@ -70,8 +72,8 @@ export default function Worker() {
                     <td style={{whiteSpace: 'nowrap'}}>{worker.workerLastName} {worker.workerName} {worker.workerMiddleName}</td>
                     <td>{worker.workerSalary}</td>
                     <td>{worker.postName}</td>
-                    <td>{new Date(worker.workerBirthday).getDate()}.{new Date(worker.workerBirthday).getMonth()}.{new Date(worker.workerBirthday).getFullYear()}</td>
-                    <td>{new Date(worker.workerDateStartJob).getDate()}.{new Date(worker.workerDateStartJob).getMonth()}.{new Date(worker.workerDateStartJob).getFullYear()}</td>
+                    <td>{new Date(new Date(worker.workerBirthday).getTime()).toLocaleDateString()}</td>
+                    <td>{new Date(new Date(worker.workerDateStartJob).getTime()).toLocaleDateString()}</td>
                     <td></td>
                     <td>{worker.workerPassword}</td>
                     <td>
@@ -83,14 +85,14 @@ export default function Worker() {
                         </ButtonGroup>
                     </td>
                 </tr>
-            } else {
+            } else {//месяц, день, год
                 return <tr key={worker.workerId}>
                     <td style={{whiteSpace: 'nowrap'}}>{worker.workerLastName} {worker.workerName} {worker.workerMiddleName}</td>
                     <td>{worker.workerSalary}</td>
                     <td>{worker.postName}</td>
-                    <td>{new Date(worker.workerBirthday).getDate()}.{new Date(worker.workerBirthday).getMonth()}.{new Date(worker.workerBirthday).getFullYear()}</td>
-                    <td>{new Date(worker.workerDateStartJob).getDate()}.{new Date(worker.workerDateStartJob).getMonth()}.{new Date(worker.workerDateStartJob).getFullYear()}</td>
-                    <td>{new Date(worker.workerDateEndJob).getDate()}.{new Date(worker.workerDateEndJob).getMonth()}.{new Date(worker.workerDateEndJob).getFullYear()}</td>
+                    <td>{new Date(new Date(worker.workerBirthday).getTime()).toLocaleDateString()}</td>
+                    <td>{new Date(new Date(worker.workerDateStartJob).getTime()).toLocaleDateString()}</td>
+                    <td>{new Date(new Date(worker.workerDateEndJob).getTime()).toLocaleDateString()}</td>
                     <td>{worker.workerPassword}</td>
                     <td>
                         <ButtonGroup>
@@ -109,7 +111,7 @@ export default function Worker() {
 
     async function handleSubmit() {
         let itemRes = item;
-        itemRes.workerBirthday = new Date(item.workerBirthday).setDate(new Date(item.workerBirthday).getDate());
+        itemRes.workerBirthday = new Date(item.workerBirthday).getTime();
         itemRes.workerDateStartJob = new Date(item.workerDateStartJob).setDate(new Date(item.workerDateStartJob).getDate());
         if (item.workerDateEndJob != null) itemRes.workerDateEndJob = new Date(item.workerDateEndJob).setDate(new Date(item.workerDateEndJob).getDate());
 
@@ -128,7 +130,26 @@ export default function Worker() {
         const value = target.value;
         const name = target.name;
         let item1 = item;
+        alert(value)
         item1[name] = value;
+        setItem(item1)
+    }
+
+    function handleDateBirthChange(value){
+        let item1 = item;
+        item1["workerBirthday"] = value
+        setItem(item1)
+    }
+
+    function handleDateStartJobChange(value){
+        let item1 = item;
+        item1["workerDateStartJob"] = value
+        setItem(item1)
+    }
+
+    function handleDateEndJobChange(value){
+        let item1 = item;
+        item1["workerDateEndJob"] = value
         setItem(item1)
     }
 
@@ -147,7 +168,7 @@ export default function Worker() {
                 <Table className="mt-4">
                     <thead>
                     <tr>
-                        <th width="15%">ФИО сотрудника</th>
+                        <th width="15%">ФИО сотрудника </th>
                         <th width="15%">Заработная плата сотрудника</th>
                         <th width="15%">Наименование должности</th>
                         <th width="15%">Дата рождения сотрудника</th>
@@ -166,6 +187,7 @@ export default function Worker() {
     }
     if(action === "change" || action === "add"){
         const title = <h2>Редактирование информации о сотруднике</h2>;
+        let birthDay = new Date(new Date(item.workerBirthday).getTime() - 1000 * 60 * 60 * 24).toLocaleDateString()
         if(item.workerDateEndJob != null)
         {
             return (
@@ -204,22 +226,16 @@ export default function Worker() {
                                         onChange={handleChange} autoComplete="postId">{postList}</select>
                             </FormGroup>
                             <FormGroup>
-                                <Label for="workerBirthday">Дата рождения сотрудника</Label>
-                                <Input type="text" name="workerBirthday" id="workerBirthday"
-                                       defaultValue={item.workerBirthday || ''}
-                                       onChange={handleChange} autoComplete="workerBirthday"/>
+                                <Label for="workerBirthday">Дата рождения сотрудника(мм.дд.гггг)</Label>
+                                <Calendar value={new Date(new Date(item.workerBirthday).getTime())} onChange={handleDateBirthChange} returnValue={"start"}/>
                             </FormGroup>
                             <FormGroup>
-                                <Label for="workerDateStartJob">Дата начала работы в компании</Label>
-                                <Input type="text" name="workerDateStartJob" id="workerDateStartJob"
-                                       defaultValue={item.workerDateStartJob || ''}
-                                       onChange={handleChange} autoComplete="workerDateStartJob"/>
+                                <Label for="workerDateStartJob">Дата начала работы в компании(мм.дд.гггг)</Label>
+                                <Calendar value={new Date(new Date(item.workerBirthday).getTime())} onChange={handleDateStartJobChange} returnValue={"start"}/>
                             </FormGroup>
                             <FormGroup>
-                                <Label for="workerDateEndJob">Дата окончания работы в компании</Label>
-                                <Input type="text" name="workerDateEndJob" id="workerDateEndJob"
-                                       defaultValue={item.workerDateEndJob || ''}
-                                       onChange={handleChange} autoComplete="workerDateEndJob"/>
+                                <Label for="workerDateEndJob">Дата окончания работы в компании(мм.дд.гггг)</Label>
+                                <Calendar value={new Date(new Date(item.workerBirthday).getTime())} onChange={handleDateEndJobChange} returnValue={"start"}/>
                             </FormGroup>
                             <FormGroup>
                                 <Label for="workerPassword">Пароль сотрудника</Label>
@@ -241,7 +257,7 @@ export default function Worker() {
                     <AppNavbar/>
                     <Container>
                         {title}
-                        <Form onSubmit={handleSubmit}>
+                        <Form>
                             <FormGroup>
                                 <Label for="workerLastName">Фамилия сотрудника</Label>
                                 <Input type="text" name="workerLastName" id="workerLastName"
@@ -273,21 +289,15 @@ export default function Worker() {
                             </FormGroup>
                             <FormGroup>
                                 <Label for="workerBirthday">Дата рождения сотрудника</Label>
-                                <Input type="text" name="workerBirthday" id="workerBirthday"
-                                       defaultValue={item.workerBirthday || ''}
-                                       onChange={handleChange} autoComplete="workerBirthday"/>
+                                <Calendar value={new Date(new Date(item.workerBirthday).getTime())} onChange={handleDateBirthChange} returnValue={"start"}/>
                             </FormGroup>
                             <FormGroup>
                                 <Label for="workerDateStartJob">Дата начала работы в компании</Label>
-                                <Input type="text" name="workerDateStartJob" id="workerDateStartJob"
-                                       defaultValue={item.workerDateStartJob || ''}
-                                       onChange={handleChange} autoComplete="workerDateStartJob"/>
+                                <Calendar value={new Date(new Date(item.workerBirthday).getTime())} onChange={handleDateStartJobChange} returnValue={"start"}/>
                             </FormGroup>
                             <FormGroup>
                                 <Label for="workerDateEndJob">Дата окончания работы в компании</Label>
-                                <Input type="text" name="workerDateEndJob" id="workerDateEndJob"
-                                       defaultValue={''}
-                                       onChange={handleChange} autoComplete="workerDateEndJob"/>
+                                <Calendar value={new Date()} onChange={handleDateEndJobChange} returnValue={"start"}/>
                             </FormGroup>
                             <FormGroup>
                                 <Label for="workerPassword">Пароль сотрудника</Label>
@@ -296,7 +306,7 @@ export default function Worker() {
                                        onChange={handleChange} autoComplete="workerPassword"/>
                             </FormGroup>
                             <FormGroup>
-                                <Button color="primary" type="submit">Сохранить</Button>{' '}
+                                <Button color="primary" onClick={ () => handleSubmit()}>Сохранить</Button>{' '}
                                 <Button color="secondary" onClick={() => setAction("get")}>Назад</Button>
                             </FormGroup>
                         </Form>
