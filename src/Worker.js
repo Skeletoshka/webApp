@@ -105,8 +105,6 @@ export default function Worker() {
                 </tr>
             }
         }));
-        navigate("/post");
-        navigate("/worker");
     }
 
     async function handleSubmit() {
@@ -130,7 +128,6 @@ export default function Worker() {
         const value = target.value;
         const name = target.name;
         let item1 = item;
-        alert(value)
         item1[name] = value;
         setItem(item1)
     }
@@ -152,8 +149,6 @@ export default function Worker() {
         item1["workerDateEndJob"] = value
         setItem(item1)
     }
-
-    //todo Реализовать календарь для выбора дат
 
     if(action === "get"){
         return (
