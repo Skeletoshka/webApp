@@ -29,6 +29,7 @@ export default function MoveStatus() {
             },
             body: JSON.stringify(id)
         });
+        setAction("delete");
     }
 
     async function change(id){
@@ -75,7 +76,7 @@ export default function MoveStatus() {
         }));
     }
 
-    if(action === "get") {
+    if(action === "get" || action === "delete") {
         return (
             <div>
                 <AppNavbar/>

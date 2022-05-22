@@ -38,6 +38,7 @@ export default function Client() {
             },
             body: JSON.stringify(id)
         });
+        setAction("delete");
     }
 
     async function change(id){
@@ -88,7 +89,7 @@ export default function Client() {
         }));
     }
 
-    if(action === "get") {
+    if(action === "get" || action === "delete") {
         return (
             <div>
                 <AppNavbar/>

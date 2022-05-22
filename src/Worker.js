@@ -47,6 +47,7 @@ export default function Worker() {
             },
             body: JSON.stringify(id)
         });
+        setAction("delete");
     }
 
     async function change(id){
@@ -147,7 +148,7 @@ export default function Worker() {
         setItem(item1)
     }
 
-    if(action === "get"){
+    if(action === "get" || action === "delete"){
         return (
         <div>
             <AppNavbar/>

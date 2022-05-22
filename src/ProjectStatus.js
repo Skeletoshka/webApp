@@ -29,6 +29,7 @@ export default function ProjectStatus() {
             },
             body: JSON.stringify(id)
         });
+        setAction("delete");
     }
 
     async function change(id){
@@ -75,7 +76,7 @@ export default function ProjectStatus() {
         setItem(item1);
     }
 
-    if(action === "get") {
+    if(action === "get" || action === "delete") {
         return (
             <div>
                 <AppNavbar/>
