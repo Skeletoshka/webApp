@@ -28,7 +28,32 @@ export default class AppNavbar extends Component {
                 <NavbarBrand tag={Link} to="/order">Заказы</NavbarBrand>
                 <NavbarBrand tag={Link} to="/report">Отчеты</NavbarBrand>
             </Navbar>;
-        }else {
+        }
+        if(__ROLE__.role === "PROG"){
+            return <Navbar color="dark" dark expand="md">
+                <NavbarBrand tag={Link} to="/move">Движения</NavbarBrand>
+            </Navbar>;
+        }
+        if(__ROLE__.role === "TEST"){
+            return <Navbar color="dark" dark expand="md">
+                <NavbarBrand tag={Link} to="/move">Движения</NavbarBrand>
+            </Navbar>;
+        }
+        if(__ROLE__.role === "ANALISE"){
+            return <Navbar color="dark" dark expand="md">
+                <NavbarBrand tag={Link} to="/order">Заказы</NavbarBrand>
+                <NavbarBrand tag={Link} to="/project">Проекты</NavbarBrand>
+                <NavbarBrand tag={Link} to="/task">Задания</NavbarBrand>
+                <NavbarBrand tag={Link} to="/move">Движения</NavbarBrand>
+            </Navbar>;
+        }
+        if(__ROLE__.role === "PROJECT"){
+            return <Navbar color="dark" dark expand="md">
+                <NavbarBrand tag={Link} to="/report">Отчеты</NavbarBrand>
+            </Navbar>;
+        }else{
+            return <Navbar color="dark" dark expand="md"/>
+        }
             /*return <Navbar color="dark" dark expand="md">
                 <NavbarBrand tag={Link} to="/">Home</NavbarBrand>
                 <NavbarBrand tag={Link} to="/client">Клиенты</NavbarBrand>
@@ -42,8 +67,8 @@ export default class AppNavbar extends Component {
                 <NavbarBrand tag={Link} to="/task">Задания</NavbarBrand>
                 <NavbarBrand tag={Link} to="/move">Движения</NavbarBrand>
                 <NavbarBrand tag={Link} to="/report">Отчеты</NavbarBrand>
-            </Navbar>;*/
-            return <Navbar color="dark" dark expand="md"></Navbar>
+            </Navbar>;
+            return <Navbar color="dark" dark expand="md"></Navbar>*/
         }
-    }
+    //}
 }
