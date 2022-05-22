@@ -218,15 +218,15 @@ export default function Worker() {
                                         onChange={handleChange} autoComplete="postId">{postList}</select>
                             </FormGroup>
                             <FormGroup>
-                                <Label for="workerBirthday">Дата рождения сотрудника(мм.дд.гггг)</Label>
+                                <Label for="workerBirthday">Дата рождения сотрудника</Label>
                                 <Calendar value={new Date(new Date(item.workerBirthday).getTime())} onChange={handleDateBirthChange} returnValue={"start"}/>
                             </FormGroup>
                             <FormGroup>
-                                <Label for="workerDateStartJob">Дата начала работы в компании(мм.дд.гггг)</Label>
+                                <Label for="workerDateStartJob">Дата начала работы в компании</Label>
                                 <Calendar value={new Date(new Date(item.workerBirthday).getTime())} onChange={handleDateStartJobChange} returnValue={"start"}/>
                             </FormGroup>
                             <FormGroup>
-                                <Label for="workerDateEndJob">Дата окончания работы в компании(мм.дд.гггг)</Label>
+                                <Label for="workerDateEndJob">Дата окончания работы в компании</Label>
                                 <Calendar value={new Date(new Date(item.workerBirthday).getTime())} onChange={handleDateEndJobChange} returnValue={"start"}/>
                             </FormGroup>
                             <FormGroup>

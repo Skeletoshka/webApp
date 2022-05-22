@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, {useEffect} from 'react';
 import './App.css';
 import AppNavbar from './AppNavbar';
 import {Button, Container, FormGroup, Label} from 'reactstrap';
@@ -22,21 +22,25 @@ export default function Home(){
 
     async function handleSubmit(event){
         event.preventDefault();
-        if (login === "dir" && password === "123l") {
+        if (login === "dir" && password === "dir") {
             __ROLE__.role = "DIR";
             navigate("/worker");
         }
-        if (login === "prog" && password === "1234") {
+        if (login === "prog" && password === "prog") {
             __ROLE__.role = "PROG";
-            navigate("/worker");
+            navigate("/move");
         }
-        if (login === "test" && password === "534532") {
+        if (login === "test" && password === "test") {
             __ROLE__.role = "TEST";
-            navigate("/worker");
+            navigate("/move");
         }
-        if (login === "analise" && password === "123ras") {
+        if (login === "analise" && password === "analise") {
             __ROLE__.role = "ANALISE";
-            navigate("/worker");
+            navigate("/move");
+        }
+        if (login === "project" && password === "project") {
+            __ROLE__.role = "PROJECT";
+            navigate("/report");
         }
     }
 
