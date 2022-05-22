@@ -1,38 +1,35 @@
-import React, { Component } from 'react';
+import React, {useEffect, useState} from 'react';
 import {Button, ButtonGroup, Container, Form, FormGroup, Input, Label, Table} from 'reactstrap';
 import AppNavbar from './AppNavbar';
 import './App.css';
 
-class Client extends Component {
+const emptyItem = {
+    clientId:0,
+    clientCompanyName: ' ',
+    clientCity: '',
+    clientStreet: '',
+    clientHouse: '',
+    clientEmail: '',
+    clientPhoneNumber: '',
+    clientName: '',
+    clientLastName: '',
+    clientMiddleName: '',
+};
 
-    emptyItem = {
-        clientId:0,
-        clientCompanyName: '',
-        clientCity: '',
-        clientStreet: '',
-        clientHouse: '',
-        clientEmail: '',
-        clientPhoneNumber: '',
-        clientName: '',
-        clientLastName: '',
-        clientMiddleName: '',
-    };
+export default function Client() {
 
-    constructor(props) {
-        super(props);
-        this.state = {clients: [], item: this.emptyItem, action: "get"};
-        this.remove = this.remove.bind(this);
-        this.handleChange = this.handleChange.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
-    }
+    const [clients, setClients] = useState();
+    const [clientList, setClientList] = useState();
+    const [item, setItem] = useState(emptyItem);
+    const [action, setAction] = useState("get" );
 
-    componentDidMount() {
+    useEffect(() => {
         fetch('http://localhost:8090/client/getlist')
             .then(response => response.json())
-            .then(data => this.setState({clients: data}));
-    }
+            .then(data => setClients(data));
+    }, [action])
 
-    async remove(id) {
+    async function remove(id) {
         await fetch(`http://localhost:8090/client/delete`, {
             method: 'DELETE',
             headers: {
@@ -41,22 +38,19 @@ class Client extends Component {
             },
             body: JSON.stringify(id)
         });
-        window.location.reload();
     }
 
-    async change(id){
+    async function change(id){
         const client = await (await fetch(`http://localhost:8090/client/get`,{method: "POST", body: JSON.stringify(id)})).json();
-        this.setState({item: client, action: "change"});
+        setAction("change");
+        setItem(client)
     }
 
-    async add(){
-        this.setState({action: "add"});
+    async function add(){
+        setAction("add");
     }
 
-    async handleSubmit(event) {
-        event.preventDefault();
-        let item = this.state.item;
-
+    async function handleSubmit(event) {
         await fetch('http://localhost:8090/client/update', {
             method: 'PUT',
             headers: {
@@ -65,131 +59,125 @@ class Client extends Component {
             },
             body: JSON.stringify(item),
         });
-        this.props.history.push('/client');
     }
 
-    handleChange(event) {
+    function handleChange(event) {
         const target = event.target;
         const value = target.value;
         const name = target.name;
-        const item = this.state.item;
-        item[name] = value;
-        this.setState({item: item});
-    };
-
-    render() {
-        const {clients, isLoading} = this.state;
-
-        if (isLoading) {
-            return <p>Loading...</p>;
-        }
-
-        if(this.state.action === "get") {
-            const clientList = clients.map(client => {
-                return <tr key={client.clientId}>
-                    <td style={{whiteSpace: 'nowrap'}}>{client.clientCompanyName}</td>
-                    <td>{client.clientCity}, {client.clientStreet} {client.clientHouse}</td>
-                    <td>{client.clientEmail}</td>
-                    <td>{client.clientPhoneNumber}</td>
-                    <td>{client.clientLastName} {client.clientName} {client.clientMiddleName}</td>
-                    <td>
-                        <ButtonGroup>
-                            <Button size="sm" color="primary" onClick={() => this.change(client.clientId)}>Редактировать</Button>
-                            <Button size="sm" id="delete-button" onClick={() => this.remove(client.clientId)}>Удалить</Button>
-                        </ButtonGroup>
-                    </td>
-                </tr>
-            });
-            return (
-                <div>
-                    <AppNavbar/>
-                    <Container fluid>
-                        <div className="float-right">
-                            <Button color="success" onClick={()=>this.add()}>Добавить клиента</Button>
-                        </div>
-                        <h3>Клиенты</h3>
-                        <Table className="mt-4">
-                            <thead>
-                            <tr>
-                                <th width="15%">Имя компании</th>
-                                <th width="30%">Адрес компании</th>
-                                <th width="15%">Email</th>
-                                <th width="15%">Номер телефона</th>
-                                <th width="50%">Директор</th>
-                                <th width="40%">Действие</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {clientList}
-                            </tbody>
-                        </Table>
-                    </Container>
-                </div>
-            );
-        }
-        if(this.state.action === "change" || this.state.action === "add"){
-            const {item} = this.state;
-            const title = <h2>Редактирование информации о клиенте</h2>;
-            return (
-                <div>
-                    <AppNavbar/>
-                    <Container>
-                        {title}
-                        <Form onSubmit={this.handleSubmit}>
-                            <FormGroup>
-                                <Label for="clientCompanyName">Наименование компании</Label>
-                                <Input type="text" name="clientCompanyName" id="clientCompanyName" defaultValue={item.clientCompanyName || ''}
-                                       onChange={this.handleChange} autoComplete="clientCompanyName"/>
-                            </FormGroup>
-                            <FormGroup>
-                                <Label for="clientCity">Город</Label>
-                                <Input type="text" name="clientCity" id="clientCity" defaultValue={item.clientCity || ''}
-                                       onChange={this.handleChange} autoComplete="clientCity"/>
-                            </FormGroup>
-                            <FormGroup>
-                                <Label for="clientStreet">Улица</Label>
-                                <Input type="text" name="clientStreet" id="clientStreet" defaultValue={item.clientStreet || ''}
-                                       onChange={this.handleChange} autoComplete="clientStreet"/>
-                            </FormGroup>
-                            <FormGroup>
-                                <Label for="clientHouse">Дом</Label>
-                                <Input type="text" name="clientHouse" id="clientHouse" defaultValue={item.clientHouse || ''}
-                                       onChange={this.handleChange} autoComplete="clientHouse"/>
-                            </FormGroup>
-                            <FormGroup>
-                                <Label for="clientEmail">Email</Label>
-                                <Input type="text" name="clientEmail" id="clientEmail" defaultValue={item.clientEmail || ''}
-                                       onChange={this.handleChange} autoComplete="clientEmail"/>
-                            </FormGroup>
-                            <FormGroup>
-                                <Label for="clientPhoneNumber">Номер телефона</Label>
-                                <Input type="text" name="clientPhoneNumber" id="clientPhoneNumber" defaultValue={item.clientPhoneNumber || ''}
-                                       onChange={this.handleChange} autoComplete="clientPhoneNumber"/>
-                            </FormGroup>
-                            <FormGroup>
-                                <Label for="clientName">Имя</Label>
-                                <Input type="text" name="clientName" id="clientName" defaultValue={item.clientName || ''}
-                                       onChange={this.handleChange} autoComplete="clientName"/>
-                            </FormGroup>
-                            <FormGroup>
-                                <Label for="clientLastName">Фамилия</Label>
-                                <Input type="text" name="clientLastName" id="clientLastName" defaultValue={item.clientLastName || ''}
-                                       onChange={this.handleChange} autoComplete="clientLastName"/>
-                            </FormGroup>
-                            <FormGroup>
-                                <Label for="clientMiddleName">Отчество</Label>
-                                <Input type="text" name="clientMiddleName" id="clientMiddleName" defaultValue={item.clientMiddleName || ''}
-                                       onChange={this.handleChange} autoComplete="clientMiddleName"/>
-                            </FormGroup>
-                            <FormGroup>
-                                <Button color="primary" type="submit">Сохранить</Button>{' '}
-                                <Button color="secondary" onClick={()=>window.location.reload()}>Назад</Button>
-                            </FormGroup>
-                        </Form>
-                    </Container>
-                </div>
-            );
-        }
+        const item1 = item;
+        item1[name] = value;
+        setItem(item1);
     }
+
+    function view(){
+        setClientList(clients.map(client => {
+            return <tr key={client.clientId}>
+                <td style={{whiteSpace: 'nowrap'}}>{client.clientCompanyName}</td>
+                <td>{client.clientCity}, {client.clientStreet} {client.clientHouse}</td>
+                <td>{client.clientEmail}</td>
+                <td>{client.clientPhoneNumber}</td>
+                <td>{client.clientLastName} {client.clientName} {client.clientMiddleName}</td>
+                <td>
+                    <ButtonGroup>
+                        <Button size="sm" color="primary" onClick={() => change(client.clientId)}>Редактировать</Button>
+                        <Button size="sm" id="delete-button" onClick={() => remove(client.clientId)}>Удалить</Button>
+                    </ButtonGroup>
+                </td>
+            </tr>
+        }));
+    }
+
+    if(action === "get") {
+        return (
+            <div>
+                <AppNavbar/>
+                <Container fluid>
+                    <div className="float-right">
+                        <Button color="success" onClick={()=>add()}>Добавить клиента</Button>
+                        <Button color="warning" onClick={()=>view()}>Обновить</Button>
+                    </div>
+                    <h3>Клиенты</h3>
+                    <Table className="mt-4">
+                        <thead>
+                        <tr>
+                            <th width="15%">Имя компании</th>
+                            <th width="30%">Адрес компании</th>
+                            <th width="15%">Email</th>
+                            <th width="15%">Номер телефона</th>
+                            <th width="50%">Директор</th>
+                            <th width="40%">Действие</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            {clientList}
+                        </tbody>
+                    </Table>
+                </Container>
+            </div>
+        );
+    }
+    if(action === "change" || action === "add"){
+        const title = <h2>Редактирование информации о клиенте</h2>;
+        return (
+            <div>
+                <AppNavbar/>
+                <Container>
+                    {title}
+                    <Form>
+                        <FormGroup>
+                            <Label for="clientCompanyName">Наименование компании</Label>
+                            <Input type="text" name="clientCompanyName" id="clientCompanyName" defaultValue={item.clientCompanyName || ''}
+                                   onChange={handleChange} autoComplete="clientCompanyName"/>
+                        </FormGroup>
+                        <FormGroup>
+                            <Label for="clientCity">Город</Label>
+                            <Input type="text" name="clientCity" id="clientCity" defaultValue={item.clientCity || ''}
+                                   onChange={handleChange} autoComplete="clientCity"/>
+                        </FormGroup>
+                        <FormGroup>
+                            <Label for="clientStreet">Улица</Label>
+                            <Input type="text" name="clientStreet" id="clientStreet" defaultValue={item.clientStreet || ''}
+                                   onChange={handleChange} autoComplete="clientStreet"/>
+                        </FormGroup>
+                        <FormGroup>
+                            <Label for="clientHouse">Дом</Label>
+                            <Input type="text" name="clientHouse" id="clientHouse" defaultValue={item.clientHouse || ''}
+                                   onChange={handleChange} autoComplete="clientHouse"/>
+                        </FormGroup>
+                        <FormGroup>
+                            <Label for="clientEmail">Email</Label>
+                            <Input type="text" name="clientEmail" id="clientEmail" defaultValue={item.clientEmail || ''}
+                                   onChange={handleChange} autoComplete="clientEmail"/>
+                        </FormGroup>
+                        <FormGroup>
+                            <Label for="clientPhoneNumber">Номер телефона</Label>
+                            <Input type="text" name="clientPhoneNumber" id="clientPhoneNumber" defaultValue={item.clientPhoneNumber || ''}
+                                   onChange={handleChange} autoComplete="clientPhoneNumber"/>
+                        </FormGroup>
+                        <FormGroup>
+                            <Label for="clientName">Имя</Label>
+                            <Input type="text" name="clientName" id="clientName" defaultValue={item.clientName || ''}
+                                   onChange={handleChange} autoComplete="clientName"/>
+                        </FormGroup>
+                        <FormGroup>
+                            <Label for="clientLastName">Фамилия</Label>
+                            <Input type="text" name="clientLastName" id="clientLastName" defaultValue={item.clientLastName || ''}
+                                   onChange={handleChange} autoComplete="clientLastName"/>
+                        </FormGroup>
+                        <FormGroup>
+                            <Label for="clientMiddleName">Отчество</Label>
+                            <Input type="text" name="clientMiddleName" id="clientMiddleName" defaultValue={item.clientMiddleName || ''}
+                                   onChange={handleChange} autoComplete="clientMiddleName"/>
+                        </FormGroup>
+                        <FormGroup>
+                            <Button color="primary" onClick={() => handleSubmit()}>Сохранить</Button>{' '}
+                            <Button color="secondary" onClick={()=>setAction("get")}>Назад</Button>
+                        </FormGroup>
+                    </Form>
+                </Container>
+            </div>
+        );
+    }
+
 }
-export default Client;

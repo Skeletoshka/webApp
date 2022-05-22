@@ -2,7 +2,6 @@ import React, {useEffect, useState} from 'react';
 import {Button, ButtonGroup, Container, FormGroup, Label, Table, Input} from 'reactstrap';
 import AppNavbar from './AppNavbar';
 import './App.css';
-import {useNavigate} from "react-router-dom";
 import {Form} from "antd";
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
@@ -22,8 +21,6 @@ const emptyItem = {
 }
 
 export default function Worker() {
-
-    const navigate = useNavigate();
 
     const [workers, setWorkers] = useState();
     const [workerList, setWorkerList] = useState();
@@ -182,7 +179,6 @@ export default function Worker() {
     }
     if(action === "change" || action === "add"){
         const title = <h2>Редактирование информации о сотруднике</h2>;
-        let birthDay = new Date(new Date(item.workerBirthday).getTime() - 1000 * 60 * 60 * 24).toLocaleDateString()
         if(item.workerDateEndJob != null)
         {
             return (
