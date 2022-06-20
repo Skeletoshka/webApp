@@ -135,7 +135,7 @@ export default function Order(){
                         <Button color="success" onClick={()=>add()}>Добавить заказ</Button>
                         <Button color="warning" onClick={()=>view()}>Обновить</Button>
                     </div>
-                    <h3>Компании</h3>
+                    <h3>Заказы</h3>
                     <Table className="mt-4">
                         <thead>
                         <tr>

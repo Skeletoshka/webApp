@@ -104,7 +104,7 @@ export default function Post(){
     if(action === "change" || action === "add"){
         let title;
         if(action === "change") title = <h2>Редактирование информации о должности</h2>;
-        if(action === "add") title = <h2>LjДобавление информации о должности</h2>;
+        if(action === "add") title = <h2>Добавление информации о должности</h2>;
         return (
             <div>
                 <AppNavbar/>

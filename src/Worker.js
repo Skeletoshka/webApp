@@ -16,7 +16,7 @@ const emptyItem = {
     postName: '',
     workerBirthday: new Date(),
     workerDateStartJob: new Date(),
-    workerDateEndJob: new Date(),
+    workerDateEndJob: null,
     workerPassword: '',
 }
 

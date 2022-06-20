@@ -4,6 +4,7 @@ import AppNavbar from './AppNavbar';
 import './App.css';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
+import {Document, Page} from 'react-pdf';
 
 const emptyItem = {
     dateStart: new Date().toISOString(),
@@ -29,6 +30,8 @@ export default function Report() {
     const [projectTeamList, setProjectTeamList] = useState();
     const [dateRange, setDateRange] = useState(emptyItem);
     const [action, setAction] = useState("get" );
+    const [NumPages, setNumPages] = useState(null);
+    const [PageNumber, setPageNumber] = useState(1);
 
     useEffect(() => {
         fetch('http://localhost:8090/order/getlist')
@@ -44,6 +47,10 @@ export default function Report() {
             .then(response => response.json())
             .then(data => setProjects(data));
     }, [action])
+
+    function onDocumentLoadSuccess({ NumPages }) {
+        setNumPages(NumPages);
+    }
 
     async function getReport(id){
         await fetch(`http://localhost:8090/report/client`, {
@@ -247,17 +254,16 @@ export default function Report() {
                 <AppNavbar/>
                 <div className="float-right">
                     <Button color="success" onClick={()=>setAction("get")}>Назад</Button>
-                    <Button color="warning" onClick={()=>view()}>Обновить</Button>
                 </div>
-                <Table className="mt-4">
+                <Table  width = "60">
                     <thead>
-                    <tr align={"center"}>
-                        <td colSpan="2">{title}</td>
+                    <tr align={"center"} width="720px">
+                        <th colSpan="2">{title}</th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr>
-                        <td colspan="2">Общество с ограниченной ответственностью "Геликон" (ООО "Геликон") в лице директора {item.workerLastName} {item.workerName} {item.workerMiddleName},
+                        <td colspan="2" width="720px">Общество с ограниченной ответственностью "Геликон" (ООО "Геликон") в лице директора {item.workerLastName} {item.workerName} {item.workerMiddleName},
                         действующего на основании устава компании, именуемый в дальнейшем "Исполнитель" с одной стороны и {item.clientLastName} {item.clientName} {item.clientMiddleName}
                             в лице директора , действующего на основании устава, именуемый в дальнейшем "Заказчик" заключили настоящий договор о нижеследующем:</td>
                     </tr>
@@ -343,7 +349,6 @@ export default function Report() {
                 <AppNavbar/>
                 <div className="float-right">
                     <Button color="success" onClick={()=>setAction("get")}>Назад</Button>
-                    <Button color="warning" onClick={()=>view()}>Обновить</Button>
                 </div>
                 <Table className="mt-4">
                     <thead>
@@ -405,7 +410,6 @@ export default function Report() {
                 <AppNavbar/>
                 <div className="float-right">
                     <Button color="success" onClick={()=>setAction("get")}>Назад</Button>
-                    <Button color="warning" onClick={()=>view()}>Обновить</Button>
                 </div>
                 <Table className="mt-4">
                     <thead>
